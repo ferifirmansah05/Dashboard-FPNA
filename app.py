@@ -48,10 +48,10 @@ def update_sunburst(selected_month_str):
 
     fig = px.sunburst(
         filtered_df,
-        path=["Kat_1", "Kat_2", "Kat_3", "Kat_4", "Kat_5"],
+        path=[ "Kat_2", "Kat_3", "Kat_4", "Kat_5"],
         values="Value",
         color='Kat_3',
-        color_discrete_sequence=px.colors.qualitative.Pastel
+        color_discrete_sequence=['rgb(198, 35, 0)', 'rgb(215, 215, 215)', 'rgb(220,132,12)', 'rgba(89,75,219,255)']
     )
     return fig
 
