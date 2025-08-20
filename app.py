@@ -48,7 +48,7 @@ def update_sunburst(selected_month_str):
 
     fig = px.sunburst(
         filtered_df,
-        path=[ "Kat_2", "Kat_3", "Kat_4", "Kat_5"],
+        path=["Kat_2", "Kat_3", "Kat_4", "Kat_5"],
         values="Value",
         color='Kat_3',
         color_discrete_sequence=['rgb(198, 35, 0)', 'rgb(215, 215, 215)', 'rgb(220,132,12)', 'rgba(89,75,219,255)']
@@ -72,7 +72,7 @@ def display_click_data(clickData, selected_month_str):
 
     filtered_df = df[df['Month_str'] == selected_month_str]
 
-    columns_kat = ["Kat_1", "Kat_2", "Kat_3", "Kat_4", "Kat_5"]
+    columns_kat = ["Kat_2", "Kat_3", "Kat_4", "Kat_5"]
     for i, val in enumerate(path_list):
         if i < len(columns_kat) and val != "":
             filtered_df = filtered_df[filtered_df[columns_kat[i]] == val]
