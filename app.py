@@ -29,8 +29,6 @@ app = dash.Dash(__name__)
 server = app.server
 
 app.layout = html.Div([
-    html.H1("Visualisasi Sunburst"),
-    
     html.Label("Pilih Bulan:"),
     dcc.Dropdown(
         id='month-filter',
@@ -56,7 +54,7 @@ def update_sunburst(selected_month):
         filtered_df,
         path=["Kat_1", "Kat_2", "Kat_3", "Kat_4", "Kat_5"],
         values="Value",
-        title=f"Sunburst Penjualan - {selected_month}"
+        color='Kat_3'
     )
     return fig
 
