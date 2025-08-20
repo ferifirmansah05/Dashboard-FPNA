@@ -38,6 +38,7 @@ app.layout = html.Div([
         value=available_months[0],
         clearable=False
     ),
+    dcc.Interval(id='interval', interval=3000),  # per 3 detik
     
     dcc.Graph(id='sunburst-chart'),
 
