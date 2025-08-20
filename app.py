@@ -16,7 +16,7 @@ data = {
 
 df = pd.DataFrame(data)
 
-# Sunburst chart
+# Sunburst Chart
 fig = px.sunburst(
     df,
     path=["Kat_1", "Kat_2", "Kat_3", "Kat_4", "Kat_5"],
@@ -24,9 +24,9 @@ fig = px.sunburst(
     title="Sunburst Penjualan"
 )
 
-# Dash app
+# Dash App
 app = dash.Dash(__name__)
-server = app.server  # Ini penting untuk deploy di Render
+server = app.server  # penting untuk deployment
 
 app.layout = html.Div([
     html.H1("Visualisasi Sunburst Penjualan"),
