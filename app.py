@@ -82,7 +82,7 @@ def display_click_data(clickData, selected_month_str):
 
     return dash_table.DataTable(
         data=filtered_df.to_dict('records'),
-        columns=[{"name": i, "id": i} for i in filtered_df.columns if i != 'Month_str'],
+        columns=[{"name": i, "id": i} for i in filtered_df.columns if i not in ['Month_str','Month']],
         page_size=10,
         style_table={'overflowX': 'auto'},
         style_cell={'textAlign': 'left', 'padding': '5px'},
