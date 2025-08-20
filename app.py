@@ -1,97 +1,63 @@
 import dash
-from dash import dcc, html, Input, Output
+from dash import html, dcc, Input, Output
 import pandas as pd
 import plotly.express as px
 
-# Contoh data fiktif
+# Data dengan kolom 'Month'
 data = {
-    'Region': ['Asia', 'Asia', 'Europe', 'Europe', 'America', 'America'],
-    'Country': ['Japan', 'India', 'Germany', 'France', 'USA', 'Brazil'],
-    'Category': ['Electronics', 'Furniture', 'Electronics', 'Furniture', 'Electronics', 'Furniture'],
-    'Sales': [10000, 7000, 12000, 9000, 15000, 11000],
-    'Quantity': [100, 85, 120, 95, 130, 105]
+    "Month": ["Jan", "Jan", "Jan", "Jan", "Jan", "Jan", "Jan", "Jan", "Jan",
+              "Feb", "Feb", "Feb", "Feb", "Feb", "Feb", "Feb", "Feb", "Feb"],
+    "Kat_1": ["Penjualan"] * 18,
+    "Kat_2": ["Penjualan Bersih"] * 16 + ["Potongan/Return", "Potongan/Return"],
+    "Kat_3": ["COGS"] * 4 + ["Gross Profit"] * 4 + [""] + ["COGS"] * 4 + ["Gross Profit"] * 4 + [""] ,
+    "Kat_4": ["", "COGM", "COGM", "COGM", "", "Operational Cost", "Operational Cost", "Operational Cost", "",
+              "", "COGM", "COGM", "COGM", "", "Operational Cost", "Operational Cost", "Operational Cost", ""],
+    "Kat_5": ["FG", "COM", "Conversion Cost", "WIP", "Operational Income", "CK", "HO", "Resto", "",
+              "FG", "COM", "Conversion Cost", "WIP", "Operational Income", "CK", "HO", "Resto", ""],
+    "Value": [72, 340, 265, 62, 68, 60, 38, 96, 60,
+              80, 300, 240, 55, 70, 50, 35, 90, 40],
+    "%": ["6.79%", "32.05%", "24.98%", "5.84%", "6.41%", "5.66%", "3.58%", "9.05%", "5.66%",
+          "7.5%", "28.1%", "22.5%", "5.2%", "6.5%", "4.7%", "3.3%", "8.4%", "3.7%"]
 }
 
 df = pd.DataFrame(data)
 
-# Inisialisasi Dash app
+# Daftar bulan unik untuk dropdown
+available_months = df["Month"].unique()
+
+# Dash App
 app = dash.Dash(__name__)
-app.title = "Sales Dashboard"
+server = app.server
 
-# Layout
 app.layout = html.Div([
-    html.H1("🌍 Sales Dashboard", style={'textAlign': 'center'}),
-
-    html.Div([
-        html.Div([
-            html.Label("Filter by Category:"),
-            dcc.Dropdown(
-                id='category-filter',
-                options=[{'label': cat, 'value': cat} for cat in df['Category'].unique()],
-                value=None,
-                placeholder="Select category",
-                clearable=True
-            )
-        ], style={'width': '30%', 'display': 'inline-block'}),
-
-        html.Div([
-            html.H4("💰 Total Sales:"),
-            html.Div(id='total-sales', style={'fontSize': 24})
-        ], style={'width': '30%', 'display': 'inline-block', 'textAlign': 'center'}),
-
-        html.Div([
-            html.H4("📦 Total Quantity:"),
-            html.Div(id='total-quantity', style={'fontSize': 24})
-        ], style={'width': '30%', 'display': 'inline-block', 'textAlign': 'center'})
-    ], style={'padding': '20px'}),
-
-    html.Div([
-        dcc.Graph(id='sunburst-chart'),
-    ], style={'width': '49%', 'display': 'inline-block'}),
-
-    html.Div([
-        dcc.Graph(id='bar-chart'),
-    ], style={'width': '49%', 'display': 'inline-block'})
+    html.H1("Visualisasi Sunburst Penjualan"),
+    
+    html.Label("Pilih Bulan:"),
+    dcc.Dropdown(
+        id='month-filter',
+        options=[{"label": m, "value": m} for m in available_months],
+        value=available_months[0],  # default value
+        clearable=False
+    ),
+    
+    dcc.Graph(id='sunburst-chart')
 ])
 
-# Callback
+# Callback untuk memperbarui chart
 @app.callback(
     Output('sunburst-chart', 'figure'),
-    Output('bar-chart', 'figure'),
-    Output('total-sales', 'children'),
-    Output('total-quantity', 'children'),
-    Input('category-filter', 'value')
+    Input('month-filter', 'value')
 )
-def update_dashboard(selected_category):
-    if selected_category:
-        filtered_df = df[df['Category'] == selected_category]
-    else:
-        filtered_df = df
+def update_sunburst(selected_month):
+    filtered_df = df[df["Month"] == selected_month]
 
-    # Sunburst chart
-    sunburst = px.sunburst(
+    fig = px.sunburst(
         filtered_df,
-        path=['Region', 'Country', 'Category'],
-        values='Sales',
-        title='Sales Distribution by Region/Country/Category'
+        path=["Kat_1", "Kat_2", "Kat_3", "Kat_4", "Kat_5"],
+        values="Value",
+        title=f"Sunburst Penjualan - {selected_month}"
     )
+    return fig
 
-    # Bar chart
-    bar = px.bar(
-        filtered_df,
-        x='Country',
-        y='Sales',
-        color='Country',
-        title='Sales per Country'
-    )
-
-    # Metrics
-    total_sales = f"${filtered_df['Sales'].sum():,.0f}"
-    total_quantity = f"{filtered_df['Quantity'].sum():,}"
-
-    return sunburst, bar, total_sales, total_quantity
-
-# Run server
 if __name__ == '__main__':
     app.run_server(debug=True)
-server = app.server
