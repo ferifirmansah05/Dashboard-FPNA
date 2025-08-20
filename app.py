@@ -29,7 +29,7 @@ app = dash.Dash(__name__)
 server = app.server
 
 app.layout = html.Div([
-    html.H1("Visualisasi Sunburst),
+    html.H1("Visualisasi Sunburst"),
     
     html.Label("Pilih Bulan:"),
     dcc.Dropdown(
