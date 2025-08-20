@@ -2,3 +2,4 @@ plotly
 pandas
 gunicorn
 dash
+dash_table
