@@ -93,4 +93,5 @@ def update_dashboard(selected_category):
 
 # Run server
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run_server(debug=True)
+server = app.server
